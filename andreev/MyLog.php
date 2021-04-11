@@ -1,41 +1,58 @@
-<?php namespace andreev;
+<?php
+
+namespace andreev;
 
 use core\LogAbstract;
 use core\LogInterface;
 
+class MyLog extends LogAbstract implements LogInterface
+{
+    public $writeLogArray = array();
 
-Class MyLog extends LogAbstract implements LogInterface {
-
-
-
-    public function _log(String $str){
-        $this->log[]=$str;
+    public static function getWriteLogArray()
+    {
+        return self::Instance()->writeLogArray;
     }
 
-    /**
-     * @param String $str строка для записи в массив лога
-     */
-    public static function log(string $str):void{
+    public static function getLogArray()
+    {
+        return self::Instance()->log;
+    }
+
+    public static function ClearLogArray()
+    {
+        self::Instance()->log = array();
+        self::Instance()->writeLogArray = array();
+    }
+
+    public static function log(string $str): void
+    {
         self::Instance()->_log($str);
-	}
-    
-    public function _write(){
+    }
+
+    public function _log($str)
+    {
+        $this->log[] = $str;
+    }
+
+    public static function write(): void
+    {
+        self::Instance()->_write();
+    }
+
+    public function _write()
+    {
 
 
         $d = date_create();
         $z = (string)$d->format('d-m-Y\TH.i.s.u');
-        foreach($this->log as $value){
-            echo $value."\n";
+        foreach ($this->log as $value) {
+            array_push($this->writeLogArray, $value);
+            echo $value . "\n";
 
-            file_put_contents($_SERVER['DOCUMENT_ROOT']. "log\\".$z.".log", trim($value."\r\n") . PHP_EOL, FILE_APPEND);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "log\\" . $z . ".log", trim($value . "\r\n") . PHP_EOL, FILE_APPEND);
         }
-        
-    }
-    
-    public static function write():void{
-        self::Instance()->_write();
-    }
 
+    }
 }
-
 ?>
