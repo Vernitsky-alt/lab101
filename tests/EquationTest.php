@@ -18,6 +18,6 @@ class EquationTest extends TestCase
         $equation = new Equation();
         $this->expectExceptionMessage('Ошибка: уравнения не существует.');
         $this->expectException(Exception::class);
-        $equation->li_solve(0, -7);
-        $equation->li_solve(0, 2);
+        $equation->li_solve(0, -77);
+        $equation->li_solve(0, 66);
 }   
